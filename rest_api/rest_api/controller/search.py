@@ -13,6 +13,7 @@ from rest_api.utils import get_app, get_pipelines
 from rest_api.config import LOG_LEVEL
 from rest_api.schema import QueryRequest, QueryResponse
 
+from fastapi.exceptions import HTTPException
 
 logging.getLogger("haystack").setLevel(LOG_LEVEL)
 logger = logging.getLogger("haystack")
@@ -53,10 +54,15 @@ def query(request: QueryRequest):
     This endpoint receives the question as a string and allows the requester to set
     additional parameters that will be passed on to the Haystack pipeline.
     """
+    if request.language == 'en':
+        q_pipeline = query_pipeline['en_query']
+    elif request.language == 'vi':
+        q_pipeline = query_pipeline['vi_query']
+    else:
+        raise HTTPException(400, "Invalid language")
     with concurrency_limiter.run():
-        result = _process_request(query_pipeline, request)
+        result = _process_request(q_pipeline, request)
         return result
-
 
 def _process_request(pipeline, request) -> Dict[str, Any]:
     start_time = time.time()

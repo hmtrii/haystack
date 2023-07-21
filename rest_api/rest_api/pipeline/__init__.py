@@ -53,11 +53,16 @@ def setup_pipelines() -> Dict[str, Any]:
     from rest_api import config  # pylint: disable=reimported
 
     pipelines = {}
+    pipelines["query_pipeline"] = {}
+    pipelines["document_store"] = {}
 
     # Load query pipeline & document store
-    query_pipeline, document_store = _load_pipeline(config.PIPELINE_YAML_PATH, config.QUERY_PIPELINE_NAME)
-    pipelines["query_pipeline"] = query_pipeline
-    pipelines["document_store"] = document_store
+    # query_pipeline, document_store = _load_pipeline(config.PIPELINE_YAML_PATH, config.QUERY_PIPELINE_NAME)
+    query_pipeline_names = config.QUERY_PIPELINE_NAMES
+    for name in query_pipeline_names:
+        query_pipeline, document_store = _load_pipeline(config.PIPELINE_YAML_PATH, name)
+        pipelines["query_pipeline"][name] = query_pipeline
+        pipelines["document_store"][name] = document_store
 
     # Setup concurrency limiter
     concurrency_limiter = RequestLimiter(config.CONCURRENT_REQUEST_PER_WORKER)

@@ -30,6 +30,7 @@ class QueryRequest(RequestBaseModel):
     query: str
     params: Optional[dict] = None
     debug: Optional[bool] = False
+    language: Optional[str] = None
 
 
 class FilterRequest(RequestBaseModel):
