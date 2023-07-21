@@ -2,7 +2,7 @@ version: '3'
 
 services:
   haystack-api:
-    image: "deepset/haystack:cpu"
+    image: "deepset/haystack:cpu-local"
     container_name: haystack-api
     volumes:
       - ./rest_api/rest_api/pipeline:/opt/pipelines
@@ -13,6 +13,7 @@ services:
     environment:
       # - DOCUMENTSTORE_PARAMS_HOST=elasticsearch
       - PIPELINE_YAML_PATH=/opt/pipelines/pipeline_mab_search.yml
+      - QUERY_PIPELINE_NAMES=en_query
       - TOKENIZERS_PARALLELISM=false
     networks:
       - backend
